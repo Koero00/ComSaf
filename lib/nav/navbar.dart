@@ -15,7 +15,9 @@ class CusNavigationBar extends StatelessWidget {
         height: 130,
         width: 130,
         child: FloatingActionButton(
-          onPressed: (){}, 
+          onPressed: (){
+            
+          }, 
           backgroundColor:Color.fromRGBO(237, 57, 57, 5),
           shape: CircleBorder(),
           elevation: 10,
