@@ -11,15 +11,15 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-// Getting our current location
-Future<Position> _determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
+// // Getting our current location
+// Future<Position> _determinePosition() async {
+//   bool serviceEnabled;
+//   LocationPermission permission;
 
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+//   serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
   
-}
+// }
 
 
 class _HomeScreenState extends State<HomeScreen> {
