@@ -1,5 +1,3 @@
-
-// navbar.dart
 import 'package:flutter/material.dart';
 import 'package:helpin/screens/home.dart';
 
@@ -12,33 +10,39 @@ class CusNavigationBar extends StatefulWidget {
 
 class _CusNavigationBarState extends State<CusNavigationBar> {
   bool isSOSActive = false;
+  bool isSafe = false;
 
-  void toggleSOS(bool activate) {
+  void toggleSOS(bool activate, bool safe) {
     setState(() {
       isSOSActive = activate;
+      isSafe = safe;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomeScreen(toggleSOS: toggleSOS, isSOSActive: isSOSActive),
+      body: HomeScreen(toggleSOS: toggleSOS, isSOSActive: isSOSActive, isSafe: isSafe),
       floatingActionButton: SizedBox(
         height: 130,
         width: 130,
         child: FloatingActionButton(
           onPressed: () {
-            if (isSOSActive) {
-              toggleSOS(false);
+            if (isSafe) {
+              toggleSOS(false, true); // Mark as safe without reset
+            } else if (isSOSActive) {
+              toggleSOS(false, false);
             } else {
-              toggleSOS(true);
+              toggleSOS(true, false);
             }
           },
-          backgroundColor: Color.fromRGBO(237, 57, 57, 5),
+          backgroundColor: isSafe
+              ? Color(0xFF20E036) // Green when SAFE
+              : Color.fromRGBO(237, 57, 57, 5), // Red when SOS is active
           shape: CircleBorder(),
           elevation: 10,
           child: Text(
-            isSOSActive ? 'Cancel' : 'SOS',
+            isSafe ? 'SAFE' : (isSOSActive ? 'Cancel' : 'SOS'),
             style: TextStyle(fontWeight: FontWeight.w400, fontSize: 30, color: Colors.white),
           ),
         ),
