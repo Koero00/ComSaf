@@ -1,13 +1,15 @@
+// home.dart
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(bool) toggleSOS;
+  final bool isSOSActive;
+
+  const HomeScreen({super.key, required this.toggleSOS, required this.isSOSActive});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -15,65 +17,71 @@ class HomeScreen extends StatefulWidget {
 
 LocationSettings locationSettings = LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
 
-// Getting our current location (not live)
 Future<Position> _determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
 
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if(!serviceEnabled){
+  if (!serviceEnabled) {
     return Future.error('Location services disabled');
   }
 
   permission = await Geolocator.checkPermission();
-  if(permission == LocationPermission.denied){
+  if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
-    if(permission== LocationPermission.denied){
+    if (permission == LocationPermission.denied) {
       return Future.error('Location permissions are denied');
     }
   }
-  
-  if(permission == LocationPermission.deniedForever){
-    return Future.error(
-      "Location permission are permanently denied, we cannot request permission"
-    );
+
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error("Location permission are permanently denied, we cannot request permission");
   }
 
-  Position pos =  await Geolocator.getCurrentPosition(locationSettings: locationSettings);
-  
-  
+  Position pos = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
   return pos;
 }
-
-
-StreamSubscription<Position> posStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-  (Position? pos) {
-    print(pos == null ? 'Unknown' : pos.latitude.toString());
-  }
-);
 
 class _HomeScreenState extends State<HomeScreen> {
   double lat = 51.4613462;
   double long = 5.5000914;
-  
-  void initPos() async{
+  int countdown = 10;
+  Timer? _timer;
+
+  void initPos() async {
     Position pos = await _determinePosition();
-    print('${pos.latitude} ${pos.longitude}');
     setState(() {
       lat = pos.latitude;
-      long = pos.latitude;
+      long = pos.longitude;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initPos();
   }
 
+  void startCountdown() {
+    _timer?.cancel();
+    countdown = 10;
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (countdown > 0) {
+        setState(() => countdown--);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.isSOSActive && _timer == null) {
+      startCountdown();
+    } else if (!widget.isSOSActive) {
+      _timer?.cancel();
+      _timer = null;
+    }
     return Stack(
       children: [
         FlutterMap(
@@ -86,68 +94,42 @@ class _HomeScreenState extends State<HomeScreen> {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.app',
             ),
-          ]
+          ],
         ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  // Flexible for screen
-                  width: MediaQuery.sizeOf(context).width * 0.50,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+        widget.isSOSActive
+            ? Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  height: widget.isSOSActive ? 560 : 0,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                     boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(255, 177, 177, 177),
-                        blurRadius: 10,
-                        offset: Offset(0,5)
-                      )
-                    ]
+                      BoxShadow(color: Colors.black26, blurRadius: 10, spreadRadius: 2)
+                    ],
                   ),
-                  
-                  child: Row(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.search, color: const Color.fromARGB(255, 55, 57, 79),),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "Find a contact",
-                            border: InputBorder.none
-                          ),
-                        ) 
-                      ),
+                      Text("SOS Activated", style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      countdown > 0
+                          ? Column(
+                              children: [
+                                Text("Stress signal sent in:", style: TextStyle(fontSize: 36)),
+                                SizedBox(height: 10),
+                                Text("$countdown", style: TextStyle(fontSize: 72, fontWeight: FontWeight.bold, color: Colors.red)),
+                              ],
+                            )
+                          : Text("Help is on their way!", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 0, 0, 0))),
                     ],
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: (){
-
-                  }, 
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(20),
-                    backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-                    elevation: 12,
-                    shadowColor: Color.fromARGB(255, 177, 177, 177),
-                  ),
-                  child: Icon(
-                    Icons.notifications,
-                    color: Color.fromARGB(255, 55, 57, 79),
-                    size: 28,
-                    ),
-                )
-              ],
-            ),
-
-            
-          ),
-        )
+              )
+            : SizedBox.shrink(),
       ],
     );
   }
