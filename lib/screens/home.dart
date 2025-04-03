@@ -73,6 +73,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Format elapsed time as mm:ss
+  String formatElapsedTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return "$minutes:${remainingSeconds.toString().padLeft(2, '0')}";
+  }
+
   // Reset the state when SOS is deactivated completely
   void resetState() {
     _timer?.cancel();
@@ -158,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: null, // Decorative button, no functionality
                               style: TextButton.styleFrom(
                                 backgroundColor: Color(0xFF37394F), // Button color
-                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                padding: EdgeInsets.symmetric(horizontal: 46, vertical: 20),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30), // Rounded corners
                                 ),
@@ -166,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Text(
                                 "Notify contacts only",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white, // White text
                                 ),
@@ -181,7 +188,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text("Help is on their way!", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black)),
                             SizedBox(height: 10),
-                            Text("Elapsed Time: ${_stopwatch.elapsed.inSeconds} sec", style: TextStyle(fontSize: 22, color: Colors.black)),
+                            Text(
+                              "Elapsed Time: ${formatElapsedTime(_stopwatch.elapsed.inSeconds)}",
+                              style: TextStyle(fontSize: 22, color: Colors.black),
+                            ),
                           ],
                         ),
                     ],
