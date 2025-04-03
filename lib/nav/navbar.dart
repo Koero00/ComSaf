@@ -11,38 +11,54 @@ class CusNavigationBar extends StatefulWidget {
 class _CusNavigationBarState extends State<CusNavigationBar> {
   bool isSOSActive = false;
   bool isSafe = false;
+  bool isCrisisAverted = false;
 
-  void toggleSOS(bool activate, bool safe) {
+  void toggleSOS(bool activate, bool safe, bool crisisAverted) {
     setState(() {
       isSOSActive = activate;
       isSafe = safe;
+      isCrisisAverted = crisisAverted;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomeScreen(toggleSOS: toggleSOS, isSOSActive: isSOSActive, isSafe: isSafe),
+      body: HomeScreen(
+        toggleSOS: toggleSOS, 
+        isSOSActive: isSOSActive, 
+        isSafe: isSafe,
+        isCrisisAverted: isCrisisAverted,
+      ),
       floatingActionButton: SizedBox(
         height: 130,
         width: 130,
         child: FloatingActionButton(
           onPressed: () {
-            if (isSafe) {
-              toggleSOS(false, true); // Mark as safe without reset
-            } else if (isSOSActive) {
-              toggleSOS(false, false);
-            } else {
-              toggleSOS(true, false);
+            if (!isSOSActive) {
+              // Initially activate SOS
+              toggleSOS(true, false, false);
+            } else if (isSOSActive && !isSafe) {
+              // When Cancel is clicked during countdown, deactivate SOS completely
+              toggleSOS(false, false, false);
+            } else if (isSOSActive && isSafe && !isCrisisAverted) {
+              // When SAFE button is clicked after countdown reached 0,
+              // mark crisis as averted
+              toggleSOS(true, false, true);
+            } else if (isSOSActive && isCrisisAverted) {
+              // When "Close" is clicked, completely deactivate SOS
+              toggleSOS(false, false, false);
             }
           },
-          backgroundColor: isSafe
-              ? Color(0xFF20E036) // Green when SAFE
-              : Color.fromRGBO(237, 57, 57, 5), // Red when SOS is active
+          backgroundColor: isCrisisAverted
+              ? Colors.grey // Neutral color when "Close" is active
+              : (isSafe && !isCrisisAverted ? Color(0xFF20E036) : Color.fromRGBO(237, 57, 57, 5)),
           shape: CircleBorder(),
           elevation: 10,
           child: Text(
-            isSafe ? 'SAFE' : (isSOSActive ? 'Cancel' : 'SOS'),
+            isCrisisAverted
+                ? 'Close' // Show Close button when crisis averted
+                : (isSafe && !isCrisisAverted ? 'SAFE' : (isSOSActive ? 'Cancel' : 'SOS')),
             style: TextStyle(fontWeight: FontWeight.w400, fontSize: 30, color: Colors.white),
           ),
         ),
@@ -57,8 +73,18 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.home_filled), iconSize: 40, color: Colors.white),
-              IconButton(onPressed: () {}, icon: Icon(Icons.person), iconSize: 40, color: Colors.white),
+              IconButton(
+                onPressed: () {}, 
+                icon: Icon(Icons.home_filled), 
+                iconSize: 40, 
+                color: Colors.white
+              ),
+              IconButton(
+                onPressed: () {}, 
+                icon: Icon(Icons.person), 
+                iconSize: 40, 
+                color: Colors.white
+              ),
             ],
           ),
         ),

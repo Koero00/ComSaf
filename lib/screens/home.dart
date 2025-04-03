@@ -5,11 +5,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Function(bool, bool) toggleSOS;
+  final Function(bool, bool, bool) toggleSOS;
   final bool isSOSActive;
   final bool isSafe;
+  final bool isCrisisAverted;
 
-  const HomeScreen({super.key, required this.toggleSOS, required this.isSOSActive, required this.isSafe});
+  const HomeScreen({
+    super.key, 
+    required this.toggleSOS, 
+    required this.isSOSActive, 
+    required this.isSafe,
+    required this.isCrisisAverted
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -20,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double long = 5.5000914;
   int countdown = 10;
   Timer? _timer;
-  Stopwatch _stopwatch = Stopwatch();
+  final Stopwatch _stopwatch = Stopwatch();
   Timer? _stopwatchTimer;
 
   void initPos() async {
@@ -50,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
           countdown = 0;
           _stopwatch.start();
           _startStopwatchTimer();
-          widget.toggleSOS(true, true); // Change to SAFE state
+          // Change to SAFE state automatically when countdown ends
+          widget.toggleSOS(true, true, false);
         });
       }
     });
@@ -65,16 +73,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Reset the state when SOS is deactivated completely
+  void resetState() {
+    _timer?.cancel();
+    _stopwatchTimer?.cancel();
+    _timer = null;
+    _stopwatch.stop();
+    _stopwatch.reset();
+  }
+
+  @override
+  void didUpdateWidget(HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // If crisis averted is signaled while stopwatch is running, stop it
+    if (widget.isCrisisAverted && _stopwatch.isRunning) {
+      _stopwatch.stop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.isSOSActive && _timer == null) {
+    // Handle SOS activation
+    if (widget.isSOSActive && _timer == null && !widget.isCrisisAverted) {
       startCountdown();
     } else if (!widget.isSOSActive) {
-      _timer?.cancel();
-      _stopwatchTimer?.cancel();
-      _timer = null;
-      _stopwatch.stop();
-      _stopwatch.reset();
+      resetState();
     }
 
     return Stack(
@@ -107,23 +131,59 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("SOS Activated", style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold)),
+                      Text(
+                        widget.isCrisisAverted ? "Crisis averted" : "SOS Activated", 
+                        style: TextStyle(
+                          fontSize: 44, 
+                          fontWeight: FontWeight.bold,
+                          color: widget.isCrisisAverted ? Colors.green : Colors.black
+                        )
+                      ),
                       SizedBox(height: 10),
-                      countdown > 0
-                          ? Column(
-                              children: [
-                                Text("Stress signal sent in:", style: TextStyle(fontSize: 36)),
-                                SizedBox(height: 10),
-                                Text("$countdown", style: TextStyle(fontSize: 72, fontWeight: FontWeight.bold, color: Colors.red)),
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                Text("Help is on their way!", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black)),
-                                SizedBox(height: 10),
-                                Text("Elapsed Time: ${_stopwatch.elapsed.inSeconds} sec", style: TextStyle(fontSize: 22, color: Colors.black)),
-                              ],
+                      if (countdown > 0)
+                        Column(
+                          children: [
+                            Text("Stress signal sent in:", style: TextStyle(fontSize: 36)),
+                            SizedBox(height: 10),
+                            Text(
+                              "$countdown",
+                              style: TextStyle(
+                                fontSize: 72,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              ),
                             ),
+                            SizedBox(height: 20), // Spacing before button
+                            TextButton(
+                              onPressed: null, // Decorative button, no functionality
+                              style: TextButton.styleFrom(
+                                backgroundColor: Color(0xFF37394F), // Button color
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30), // Rounded corners
+                                ),
+                              ),
+                              child: Text(
+                                "Notify contacts only",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white, // White text
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (widget.isCrisisAverted)
+                        Container() // No additional text when crisis is averted
+                      else
+                        Column(
+                          children: [
+                            Text("Help is on their way!", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black)),
+                            SizedBox(height: 10),
+                            Text("Elapsed Time: ${_stopwatch.elapsed.inSeconds} sec", style: TextStyle(fontSize: 22, color: Colors.black)),
+                          ],
+                        ),
                     ],
                   ),
                 ),
