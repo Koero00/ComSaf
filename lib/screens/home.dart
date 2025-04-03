@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:helpin/widget/expansiontile.dart';
 import 'package:latlong2/latlong.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,6 +10,9 @@ class HomeScreen extends StatefulWidget {
   final bool isSOSActive;
   final bool isSafe;
   final bool isCrisisAverted;
+
+  
+
 
   const HomeScreen({
     super.key, 
@@ -29,6 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _timer;
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _stopwatchTimer;
+
+
+  // For the rescuer view
+  bool hasAcceptedSOS = true;
+  bool medicalTabOpen = false;
 
   void initPos() async {
     Position pos = await _determinePosition();
@@ -135,9 +144,161 @@ class _HomeScreenState extends State<HomeScreen> {
                     boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10, spreadRadius: 2)],
                   ),
                   padding: EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                  child: hasAcceptedSOS ? 
+                  // Container which is switchable (for rescue view)
+                  Container(
+                    // alignment: Alignment.topCenter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: MediaQuery.sizeOf(context).height * 0.05,),
+                        // Buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: 
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                    color: Color.fromRGBO(55, 57, 79, 1),
+                                    width: 1
+                                  ),
+                                  backgroundColor: medicalTabOpen ? Color.fromRGBO(55, 57, 79, 1) : Color.fromRGBO(255, 255, 255, 1),
+                                  foregroundColor: medicalTabOpen ? Color.fromRGBO(255, 255, 255, 1) : Color.fromRGBO(55, 57, 79, 1)
+                                ),
+                                onPressed: (){
+                                  setState(() => medicalTabOpen = !medicalTabOpen);
+                                }, 
+                                child: Text("Emergency Info")
+                              ),
+                            ),
+
+                            SizedBox(width: MediaQuery.sizeOf(context).width * 0.6),
+
+                            Expanded(
+                              child: 
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: medicalTabOpen ? Color.fromRGBO(255, 255, 255, 1) : Color.fromRGBO(55, 57, 79, 1),
+                                  foregroundColor: medicalTabOpen ? Color.fromRGBO(55, 57, 79, 1) : Color.fromRGBO(255, 255, 255, 1),
+                                  side: BorderSide(
+                                    color: Color.fromRGBO(55, 57, 79, 1),
+                                    width: 1
+                                  ),
+                                ),
+                                onPressed: (){
+                                  setState(() => medicalTabOpen = !medicalTabOpen);
+                                }, 
+                                child: Text("Assistance")
+                              ),
+                            )
+                          ],
+                        ),
+
+                        SizedBox(height: 66),
+
+                        medicalTabOpen ? Column(
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(radius: 54,),
+                                SizedBox(width: 12,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                      // Name and age
+                                      Text("Frank Maxwell", style: TextStyle(fontSize: 25),),
+                                      Text("Age: 38", style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                                Spacer(),
+                                // Distance to 
+                                Text("150m", style: TextStyle(fontSize: 14),)
+                              ],
+                            ),
+
+                            SizedBox(height: 20,),
+
+                            Row(
+                              children: [
+                                Icon(Icons.monitor_heart_rounded, color: Colors.red,),
+                                SizedBox(width: 8,),
+                                // Title of health condition
+                                Text("Asthma", style: TextStyle(fontSize: 16))
+                              ],
+                            ),
+                            SizedBox(height: 8,),
+                            // Health description
+                            Text(
+                              "Nam luctus faucibus nibh, vitae dignissim orci imperdiet vitae. Maecenas euismod, nunc ac pharetra blandit, libero diam blandit magna, nec semper enim nunc vel ipsum. Fusce pretium mauris ac felis lobortis, ac varius velit porttitor. Nunc gravida est felis, id tempor sapien lacinia id. Nullam maximus nec orci et pharetra. Suspendisse lacinia, mi quis ultricies placerat, nulla ligula tincidunt ex, commodo pellentesque dui est in elit. Proin a dui pulvinar metus vehicula iaculis. Nam ut erat vel tortor mollis ultricies vehicula sit amet diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus placerat turpis quis massa pharetra luctus. Proin feugiat euismod ante sit amet ullamcorper. Cras aliquam finibus pellentesque. Vestibulum lobortis enim ut laoreet molestie. Mauris a sapien tempor, egestas urna in, interdum nulla. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                            ),
+
+                            SizedBox(height: 20,),
+
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: 
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      side: BorderSide(
+                                        color: Color.fromRGBO(55, 57, 79, 1),
+                                        width: 1
+                                      ),
+                                      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                                      foregroundColor: Color.fromRGBO(55, 57, 79, 1)
+                                    ),
+                                    onPressed: (){
+
+                                    }, 
+                                    child: Text("Can't help now")
+                                  ),
+                                ),
+
+                                SizedBox(width: MediaQuery.sizeOf(context).width * 0.2),
+
+                                Expanded(
+                                  child: 
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromRGBO(55, 57, 79, 1),
+                                      foregroundColor: Color.fromRGBO(255, 255, 255, 1),
+                                      
+                                    ),
+                                    onPressed: (){}, 
+                                    child: Text("Accept")
+                                  ),
+                                )
+
+                              ],
+                            )
+
+                          ],
+                        )
+                        :
+                        // Medical Assistance tab
+                        Column(
+                          children: [
+                            // Collapsable titles etc
+                            CusExpansiontile(title: "Test"),
+                            SizedBox(height: 16,),
+                            CusExpansiontile(title: "AI Assistance"),
+
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                  )
+                  :
+                  Container(
+                      child:  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                       Text(
                         widget.isCrisisAverted ? "Crisis averted" : "SOS Activated", 
                         style: TextStyle(
@@ -195,7 +356,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                     ],
-                  ),
+                    )
+                    
+                  )
                 ),
               )
             : SizedBox.shrink(),
