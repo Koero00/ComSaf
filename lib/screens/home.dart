@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:helpin/widget/aidcard.dart';
 import 'package:helpin/widget/expansiontile.dart';
+import 'package:helpin/widget/topbar.dart';
 import 'package:latlong2/latlong.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -140,6 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+
+        TopSearchBar(),
+        // Bottom slider
         widget.isSOSActive
             ? Align(
                 alignment: Alignment.bottomCenter,
