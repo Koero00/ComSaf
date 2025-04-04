@@ -38,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   // For the rescuer view
-  bool hasAcceptedSOS = true;
-  bool medicalTabOpen = false;
+  bool hasAcceptedSOS = false;
+  bool medicalTabOpen = true;
 
   int distance = 168;
   int age = 38;
@@ -330,6 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child:  Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                             Text(
                               widget.isCrisisAverted ? "Crisis averted" : "SOS Activated", 
                               style: TextStyle(
