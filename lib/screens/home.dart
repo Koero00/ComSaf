@@ -12,9 +12,7 @@ class HomeScreen extends StatefulWidget {
   final bool isSOSActive;
   final bool isSafe;
   final bool isCrisisAverted;
-
   
-
 
   const HomeScreen({
     super.key, 
