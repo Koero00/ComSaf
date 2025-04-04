@@ -82,20 +82,20 @@ class _TopSearchBarState extends State<TopSearchBar> {
           // SOS Notification Box
           AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            height: showNotification ? 90 : 0,  // Adjusted the height for space
+            height: showNotification ? 90 : 0,
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               color: Color(0xFFFF5252),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: showNotification 
                 ? Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: CircleAvatar(
-                          radius: 35, // Profile picture size
+                          radius: 35,
                           backgroundImage: AssetImage('assets/profile_pic1.png'),
                         ),
                       ),
@@ -105,7 +105,7 @@ class _TopSearchBarState extends State<TopSearchBar> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10),  // Distance from the top
+                              SizedBox(height: 10),
                               Text(
                                 "S.O.S Emergency",
                                 style: TextStyle(
