@@ -13,9 +13,6 @@ class HomeScreen extends StatefulWidget {
   final bool isSafe;
   final bool isCrisisAverted;
 
-  
-
-
   const HomeScreen({
     super.key, 
     required this.toggleSOS, 

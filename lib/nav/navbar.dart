@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpin/screens/home.dart';
+import 'package:helpin/widget/notificationclass.dart';
 
 class CusNavigationBar extends StatefulWidget {
   const CusNavigationBar({super.key});
@@ -12,8 +13,16 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
   bool isSOSActive = false;
   bool isSafe = false;
   bool isCrisisAverted = false;
+  final NotificationFB notificationFB = NotificationFB();
 
-  void toggleSOS(bool activate, bool safe, bool crisisAverted) {
+
+
+  void toggleSOS(bool activate, bool safe, bool crisisAverted) async {
+
+    // Testing the notifications
+    await notificationFB.sendLocationNotification(senderId: "ks41V9SyEJhCIobC6ePZJ4OXjQs2", receiverId: "sDeDsrXApBhBpKqiqiK6HBz9I6C3", lat: 5, lon: 2);
+    
+
     setState(() {
       isSOSActive = activate;
       isSafe = safe;

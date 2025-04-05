@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:helpin/nav/navbar.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:helpin/widget/notificationclass.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,18 +27,35 @@ void main() async {
   else {
     await Firebase.initializeApp();
   }
+  
+  Future<void> setupFirebaseMsg() async {
+    await FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  }
+
+  final userCred = await FirebaseAuth.instance.signInAnonymously();
+  final uid = userCred.user?.uid;
+
+  await NotificationFB().saveFcmToken(uid!);
+  await setupFirebaseMsg();
 
 
-  runZonedGuarded(() async {
-    await Firebase.initializeApp();
-    runApp(MainApp());
-  }, (error, stackTrace) {
-    print('Firebase Init Error: $error');
-  });
+  runApp(MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+class _MainAppState extends State<MainApp>{
+
+  @override 
+  void initState(){
+    super.initState();
+    NotificationFB().setupFcmHandlers();
+  }
 
   @override
   Widget build(BuildContext context) {
