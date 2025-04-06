@@ -18,7 +18,7 @@ class _TopSearchBarState extends State<TopSearchBar> {
               children: [
                 Container(
                   // Flexible for screen
-                  width: MediaQuery.sizeOf(context).width * 0.50,
+                  width: MediaQuery.sizeOf(context).width * 0.7,
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -61,7 +61,7 @@ class _TopSearchBarState extends State<TopSearchBar> {
                   child: Icon(
                     Icons.notifications,
                     color: Color.fromARGB(255, 55, 57, 79),
-                    size: 28,
+                    size: MediaQuery.sizeOf(context).height * 0.03,
                     ),
                 )
               ],

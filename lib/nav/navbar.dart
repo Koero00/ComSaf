@@ -78,7 +78,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
         notchMargin: 8,
         color: const Color.fromARGB(255, 55, 57, 79),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 70),
+          padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.06),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
