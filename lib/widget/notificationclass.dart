@@ -38,7 +38,8 @@ class NotificationFB {
     }
     await FirebaseFirestore.instance.collection('users').doc(userId)
     .set({
-      'fcmToken':token
+      'fcmToken':token, 
+      'Date': '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}'
     }, SetOptions(merge: true));
 
     return;
