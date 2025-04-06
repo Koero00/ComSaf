@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpin/screens/home.dart';
 import 'package:helpin/widget/notificationclass.dart';
 
 class CusNavigationBar extends StatefulWidget {
-  const CusNavigationBar({super.key});
+  final userid;
+  const CusNavigationBar({super.key, required this.userid});
 
   @override
   State<CusNavigationBar> createState() => _CusNavigationBarState();
@@ -19,8 +21,10 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
 
   void toggleSOS(bool activate, bool safe, bool crisisAverted) async {
 
+    print(widget.userid);
+
     // Testing the notifications
-    await notificationFB.sendLocationNotification(senderId: "EvqKjsoXV1YaMxUydjZ2gcYkzlz2", receiverId: "QK1vFRHO92U3JU2IN0BgV8WGRyl2", lat: 5, lon: 2);
+    await notificationFB.sendLocationNotification(senderId: widget.userid, receiverId: "wGf1WUoNZghBjeN098GliwhTN7s2", lat: 5, lon: 2);
     
 
     setState(() {

@@ -5,18 +5,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationFB {
 
-  double lat = 0;
-  double long = 0;
+  double? lat = 0;
+  double? long = 0;
 
-  double get latitude => lat;
-  double get longitude => long;
+  double? get latitude => lat;
+  double? get longitude => long;
 
 
-  set latitude(double lati){
+  set latitude(double? lati){
     lat = lati;  
   }
 
-  set longitude(double longi){
+  set longitude(double? longi){
     long = longi;
   }
 
@@ -75,8 +75,8 @@ class NotificationFB {
   void setupFcmHandlers(){
     FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
       print("Heyo we received a msg: ${msg.data}");
-      latitude = msg.data['lat'];
-      longitude = msg.data['long'];
+      latitude = double.tryParse(msg.data['lat'] ?? 0);
+      longitude = double.tryParse(msg.data['long'] ?? 0);
     });
 
 

@@ -8,8 +8,10 @@ import 'package:helpin/nav/navbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:helpin/widget/notificationclass.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
 
   if(kIsWeb){
     await Firebase.initializeApp(
@@ -34,17 +36,20 @@ void main() async {
   }
 
   final userCred = await FirebaseAuth.instance.signInAnonymously();
-  final uid = userCred.user?.uid;
+  // I want to pass this to the navbar 
+  String? uid = userCred.user?.uid;
 
   await NotificationFB().saveFcmToken(uid!);
   await setupFirebaseMsg();
 
 
-  runApp(MainApp());
+  runApp(MainApp(uid: uid,));
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+final String? uid;
+
+  MainApp({super.key, required this.uid});
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -59,9 +64,9 @@ class _MainAppState extends State<MainApp>{
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: CusNavigationBar()
+        body: CusNavigationBar(userid: widget.uid,)
       ),
     );
   }
