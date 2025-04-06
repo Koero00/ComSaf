@@ -18,7 +18,7 @@ dependencies:
   firebase_auth: ^5.5.2
   firebase_messaging: ^15.2.5
   flutter_local_notifications: ^19.0.0
-
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +27,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/profile_pic1.png
