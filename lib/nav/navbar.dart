@@ -40,8 +40,8 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
         isCrisisAverted: isCrisisAverted,
       ),
       floatingActionButton: SizedBox(
-        height: 130,
-        width: 130,
+        height: 140,
+        width: 140,
         child: FloatingActionButton(
           onPressed: () {
             if (!isSOSActive) {
@@ -61,7 +61,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
           },
           backgroundColor: isCrisisAverted
               ? Colors.grey // Neutral color when "Close" is active
-              : (isSafe && !isCrisisAverted ? Color(0xFF20E036) : Color.fromRGBO(237, 57, 57, 5)),
+              : (isSafe && !isCrisisAverted ? Color(0xFF20E036) : Color.fromRGBO(237, 57, 57, 1)),
           shape: CircleBorder(),
           elevation: 10,
           child: Text(

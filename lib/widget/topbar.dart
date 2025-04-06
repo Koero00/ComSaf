@@ -47,13 +47,14 @@ class _TopSearchBarState extends State<TopSearchBar> {
                     ],
                   ),
                 ),
+                SizedBox(width: MediaQuery.sizeOf(context).width * 0.02,),
                 ElevatedButton(
                   onPressed: (){
 
                   }, 
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(10),
                     backgroundColor: Color.fromRGBO(255, 255, 255, 1),
                     elevation: 12,
                     shadowColor: Color.fromARGB(255, 177, 177, 177),
