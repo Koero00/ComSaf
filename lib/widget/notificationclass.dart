@@ -73,6 +73,9 @@ class NotificationFB {
 
   // Receiving notifications
   void setupFcmHandlers(){
+    // Need to find out how to pass this information back to the correct paige
+
+
     FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
       print("Heyo we received a msg: ${msg.data}");
       latitude = double.tryParse(msg.data['lat'] ?? 0);

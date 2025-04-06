@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:helpin/widget/notification.dart';
 import 'package:intl/intl.dart';  // For formatting the time
 
 class TopSearchBar extends StatefulWidget {
-  const TopSearchBar({super.key});
+  final Function onTap;
+
+
+  const TopSearchBar({super.key, required this.onTap});
 
   @override
   State<TopSearchBar> createState() => _TopSearchBarState();
@@ -10,10 +14,29 @@ class TopSearchBar extends StatefulWidget {
 
 class _TopSearchBarState extends State<TopSearchBar> {
   bool showNotification = false;
+  final List<Widget> notificationWidgets = [];
 
   String getCurrentTime() {
     return DateFormat('HH:mm').format(DateTime.now());
   }
+
+  void addNotificationManual()
+  {
+    setState(() {
+      notificationWidgets.add(
+        NotificationPopUp(onTap: widget.onTap),
+      );
+    });
+  }
+
+  void addNotification(){
+    setState(() {
+      notificationWidgets.add(
+        NotificationPopUp(onTap: widget.onTap),
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +82,11 @@ class _TopSearchBarState extends State<TopSearchBar> {
                 SizedBox(width: MediaQuery.sizeOf(context).width * 0.02,),
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      showNotification = !showNotification;
-                    });
+                    // setState(() {
+                    //   showNotification = !showNotification;
+                    // });
+
+                    addNotificationManual();
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
@@ -81,64 +106,10 @@ class _TopSearchBarState extends State<TopSearchBar> {
           ),
           
           // SOS Notification Box
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            height: showNotification ? 90 : 0,
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: Color(0xFFFF5252),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: showNotification 
-                ? Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: CircleAvatar(
-                          radius: 35,
-                          backgroundImage: AssetImage('assets/profile_pic1.png'),
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 10),
-                              Text(
-                                "S.O.S Emergency",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                "Asthma attack",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                getCurrentTime(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : null,
-          ),
+          Column(
+            spacing: 5,
+            children: notificationWidgets,
+          )
         ],
       ),
     );

@@ -9,11 +9,11 @@ import 'package:latlong2/latlong.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(bool, bool, bool) toggleSOS;
-  final bool isSOSActive;
+  bool isSOSActive;
   final bool isSafe;
   final bool isCrisisAverted;
 
-  const HomeScreen({
+  HomeScreen({
     super.key, 
     required this.toggleSOS, 
     required this.isSOSActive, 
@@ -43,6 +43,17 @@ class _HomeScreenState extends State<HomeScreen> {
   String name = "Frank Morris";
   String medicalSituation = "Asthma";
   String medicalDescr = "luctus faucibus nibh, vitae dignissim orci imperdiet vitae. Maecenas euismod, nunc ac pharetra blandit, libero diam blandit magna, nec semper enim nunc vel ipsum. Fusce pretium mauris ac felis lobortis, ac varius velit porttitor. Nunc gravida est felis, id tempor sapien lacinia id. Nullam maximus nec orci et pharetra. Suspendisse lacinia, mi quis ultricies placerat, nulla ligula tincidunt ex, commodo pellentesque dui est in elit. Proin a dui pulvinar metus vehicula iaculis. Nam ut erat vel tortor mollis ultricies vehicula sit amet diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus placerat turpis quis massa pharetra luctus. Proin feugiat euismod ante sit amet ullamcorper. Cras aliquam finibus pellentesque. Vestibulum lobortis enim ut laoreet molestie. Mauris a sapien tempor, egestas urna in, interdum nulla. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+
+
+
+  // NEW
+  void handleNotiTap(double latitude, double longitude, String usid){
+
+    setState((){
+      widget.isSOSActive = true;
+      hasAcceptedSOS = true;
+    });
+  }
 
 
 
@@ -139,7 +150,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
 
-        TopSearchBar(),
+        TopSearchBar(
+          onTap: (double lat, double long, String id){
+            handleNotiTap(lat, long, id);
+          },
+        ),
         // Bottom slider
         widget.isSOSActive
             ? Align(
@@ -189,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
 
-                                  SizedBox(width: MediaQuery.sizeOf(context).width * 0.6),
+                                  SizedBox(width: MediaQuery.sizeOf(context).width * 0.1),
 
                                   Expanded(
                                     child: 
