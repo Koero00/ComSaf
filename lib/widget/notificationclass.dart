@@ -79,10 +79,16 @@ class NotificationFB {
       longitude = msg.data['long'];
     });
 
+
+    // Unneccesary
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage msg){
       print("User tapped notification from background");
 
     });
+
+
+    // Unneccesary
 
     FirebaseMessaging.instance.getInitialMessage().then((msg) {
       if(msg != null){

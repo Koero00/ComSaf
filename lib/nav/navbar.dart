@@ -20,7 +20,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
   void toggleSOS(bool activate, bool safe, bool crisisAverted) async {
 
     // Testing the notifications
-    await notificationFB.sendLocationNotification(senderId: "ks41V9SyEJhCIobC6ePZJ4OXjQs2", receiverId: "sDeDsrXApBhBpKqiqiK6HBz9I6C3", lat: 5, lon: 2);
+    await notificationFB.sendLocationNotification(senderId: "EvqKjsoXV1YaMxUydjZ2gcYkzlz2", receiverId: "QK1vFRHO92U3JU2IN0BgV8WGRyl2", lat: 5, lon: 2);
     
 
     setState(() {
