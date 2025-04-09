@@ -72,14 +72,19 @@ class NotificationFB {
   }
 
   // Receiving notifications
-  void setupFcmHandlers(){
+  void setupFcmHandlers(Function notify){
     // Need to find out how to pass this information back to the correct paige
 
 
     FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
-      print("Heyo we received a msg: ${msg.data}");
+      print("Received Msg");
       latitude = double.tryParse(msg.data['lat'] ?? 0);
       longitude = double.tryParse(msg.data['long'] ?? 0);
+      notify(
+        senderId:  msg.data['sender_id'].toString(),
+        lat: latitude,
+        long: longitude
+      );
     });
 
 

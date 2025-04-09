@@ -56,10 +56,11 @@ final String? uid;
 }
 class _MainAppState extends State<MainApp>{
 
+  
+
   @override 
   void initState(){
     super.initState();
-    NotificationFB().setupFcmHandlers();
   }
 
   @override

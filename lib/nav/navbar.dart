@@ -15,17 +15,12 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
   bool isSOSActive = false;
   bool isSafe = false;
   bool isCrisisAverted = false;
-  final NotificationFB notificationFB = NotificationFB();
-
-
 
   void toggleSOS(bool activate, bool safe, bool crisisAverted) async {
 
     print(widget.userid);
 
     // Testing the notifications
-    await notificationFB.sendLocationNotification(senderId: widget.userid, receiverId: "GMNvNwLdbVMgDkNXcPhi6QFrCbm2", lat: 5, lon: 2);
-    
 
     setState(() {
       isSOSActive = activate;
@@ -42,6 +37,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
         isSOSActive: isSOSActive, 
         isSafe: isSafe,
         isCrisisAverted: isCrisisAverted,
+        userId: widget.userid
       ),
       floatingActionButton: SizedBox(
         height: 140,

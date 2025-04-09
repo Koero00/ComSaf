@@ -6,13 +6,13 @@ class TopSearchBar extends StatefulWidget {
   final Function (double lon, double lat, String id) onTap;
 
 
-  const TopSearchBar({super.key, required this.onTap});
+  const TopSearchBar({super.key, required this.onTap,});
 
   @override
-  State<TopSearchBar> createState() => _TopSearchBarState();
+  TopSearchBarState createState() => TopSearchBarState();
 }
 
-class _TopSearchBarState extends State<TopSearchBar> {
+class TopSearchBarState extends State<TopSearchBar> {
   bool showNotification = false;
   List<Widget> notificationWidgets = [];
 
@@ -40,6 +40,7 @@ class _TopSearchBarState extends State<TopSearchBar> {
   }
 
   void addNotification(){
+    print("Now we triggerd the addNotification function in the topbar!");
     setState(() {
       notificationWidgets.add(
         NotificationPopUp(onTap: passInfo),

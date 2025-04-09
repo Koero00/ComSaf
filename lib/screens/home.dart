@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:helpin/widget/aidcard.dart';
 import 'package:helpin/widget/expansiontile.dart';
+import 'package:helpin/widget/notificationclass.dart';
 import 'package:helpin/widget/topbar.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -12,13 +14,15 @@ class HomeScreen extends StatefulWidget {
   bool isSOSActive;
   final bool isSafe;
   final bool isCrisisAverted;
+  final String userId;
 
   HomeScreen({
     super.key, 
     required this.toggleSOS, 
     required this.isSOSActive, 
     required this.isSafe,
-    required this.isCrisisAverted
+    required this.isCrisisAverted,
+    required this.userId
   });
 
   @override
@@ -45,6 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String medicalDescr = "luctus faucibus nibh, vitae dignissim orci imperdiet vitae. Maecenas euismod, nunc ac pharetra blandit, libero diam blandit magna, nec semper enim nunc vel ipsum. Fusce pretium mauris ac felis lobortis, ac varius velit porttitor. Nunc gravida est felis, id tempor sapien lacinia id. Nullam maximus nec orci et pharetra. Suspendisse lacinia, mi quis ultricies placerat, nulla ligula tincidunt ex, commodo pellentesque dui est in elit. Proin a dui pulvinar metus vehicula iaculis. Nam ut erat vel tortor mollis ultricies vehicula sit amet diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus placerat turpis quis massa pharetra luctus. Proin feugiat euismod ante sit amet ullamcorper. Cras aliquam finibus pellentesque. Vestibulum lobortis enim ut laoreet molestie. Mauris a sapien tempor, egestas urna in, interdum nulla. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetur adipiscing elit";
 
 
+  final GlobalKey<TopSearchBarState> _globalKey = GlobalKey();
+
+  final NotificationFB notificationFB = NotificationFB();
 
   // NEW
   void handleNotiTap(double latitude, double longitude, String usid){
@@ -65,13 +72,20 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void notifyUser({required String senderId, required double lat, required double long})
+  {
+    print("Okidoki, so it triggerd which is great $senderId, $lat, $long");
+    _globalKey.currentState?.addNotification();
+  }
+
   @override
   void initState() {
     super.initState();
     initPos();
+    NotificationFB().setupFcmHandlers(notifyUser);
   }
 
-  void startCountdown() {
+  void startCountdown() async{
     _timer?.cancel();
     countdown = 10;
     _stopwatch.reset();
@@ -81,6 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         timer.cancel();
         setState(() {
+          notificationFB.sendLocationNotification(senderId: widget.userId, receiverId: "dPMur2TNDiescohKYlBlyJO2iX33", lat: 5, lon: 2);
+
           countdown = 0;
           _stopwatch.start();
           _startStopwatchTimer();
@@ -146,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.app',
+              tileProvider: CancellableNetworkTileProvider(),
             ),
           ],
         ),
@@ -154,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: (double lat, double long, String id){
             handleNotiTap(lat, long, id);
           },
+          key: _globalKey,
         ),
         // Bottom slider
         widget.isSOSActive
