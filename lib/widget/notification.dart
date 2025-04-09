@@ -32,7 +32,7 @@ class _NotificationPopUpState extends State<NotificationPopUp> {
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
               // Fix this
-              onTap: widget.onTap(0,0, ""),
+              onTap: () => widget.onTap(),
               child: Row(
                 children: [
                   Padding(

@@ -24,7 +24,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
     print(widget.userid);
 
     // Testing the notifications
-    await notificationFB.sendLocationNotification(senderId: widget.userid, receiverId: "wGf1WUoNZghBjeN098GliwhTN7s2", lat: 5, lon: 2);
+    await notificationFB.sendLocationNotification(senderId: widget.userid, receiverId: "GMNvNwLdbVMgDkNXcPhi6QFrCbm2", lat: 5, lon: 2);
     
 
     setState(() {

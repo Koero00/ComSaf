@@ -3,7 +3,7 @@ import 'package:helpin/widget/notification.dart';
 import 'package:intl/intl.dart';  // For formatting the time
 
 class TopSearchBar extends StatefulWidget {
-  final Function onTap;
+  final Function (double lon, double lat, String id) onTap;
 
 
   const TopSearchBar({super.key, required this.onTap});
@@ -14,17 +14,27 @@ class TopSearchBar extends StatefulWidget {
 
 class _TopSearchBarState extends State<TopSearchBar> {
   bool showNotification = false;
-  final List<Widget> notificationWidgets = [];
+  List<Widget> notificationWidgets = [];
 
   String getCurrentTime() {
     return DateFormat('HH:mm').format(DateTime.now());
   }
 
+
+  void passInfo()
+  {
+    print("Ok, this function has been triggerd.");
+    notificationWidgets.removeAt(0);
+    widget.onTap(0,0, "");
+  }
+
   void addNotificationManual()
   {
+
+    print("OK, we passed the passInfo func");
     setState(() {
       notificationWidgets.add(
-        NotificationPopUp(onTap: widget.onTap),
+        NotificationPopUp(onTap: passInfo),
       );
     });
   }
@@ -32,11 +42,13 @@ class _TopSearchBarState extends State<TopSearchBar> {
   void addNotification(){
     setState(() {
       notificationWidgets.add(
-        NotificationPopUp(onTap: widget.onTap),
+        NotificationPopUp(onTap: passInfo),
       );
     });
   }
 
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +94,6 @@ class _TopSearchBarState extends State<TopSearchBar> {
                 SizedBox(width: MediaQuery.sizeOf(context).width * 0.02,),
                 ElevatedButton(
                   onPressed: () {
-                    // setState(() {
-                    //   showNotification = !showNotification;
-                    // });
-
                     addNotificationManual();
                   },
                   style: ElevatedButton.styleFrom(
@@ -107,7 +115,6 @@ class _TopSearchBarState extends State<TopSearchBar> {
           
           // SOS Notification Box
           Column(
-            spacing: 5,
             children: notificationWidgets,
           )
         ],
