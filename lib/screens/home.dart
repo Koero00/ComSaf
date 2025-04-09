@@ -53,6 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final NotificationFB notificationFB = NotificationFB();
 
+
+  // Bit of INFO: 
+  /*
+    1. FIRST OPEN THE CONSOLE ON WEB (for example f12)
+    2. Then click the SOS button. This will display a id like: LHEsdL1hy9MX08mnROzDHBxOEEm1
+    3. Change the below receiverID with the one displayed in the console. 
+    4. Restart the pages and hit SOS to see it work!
+  */
+  String receiverID = "LHEsdL1hy9MX08mnROzDHBxOEEm1";
+
+
   // NEW
   void handleNotiTap(double latitude, double longitude, String usid){
 
@@ -95,7 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         timer.cancel();
         setState(() {
-          notificationFB.sendLocationNotification(senderId: widget.userId, receiverId: "dPMur2TNDiescohKYlBlyJO2iX33", lat: 5, lon: 2);
+
+
+          notificationFB.sendLocationNotification(senderId: widget.userId, receiverId: receiverID, lat: 5, lon: 2);
 
           countdown = 0;
           _stopwatch.start();
