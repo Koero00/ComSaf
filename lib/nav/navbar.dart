@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpin/screens/home.dart';
+import 'package:helpin/widget/notificationclass.dart';
 
 class CusNavigationBar extends StatefulWidget {
-  const CusNavigationBar({super.key});
+  final userid;
+  const CusNavigationBar({super.key, required this.userid});
 
   @override
   State<CusNavigationBar> createState() => _CusNavigationBarState();
@@ -13,7 +16,12 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
   bool isSafe = false;
   bool isCrisisAverted = false;
 
-  void toggleSOS(bool activate, bool safe, bool crisisAverted) {
+  void toggleSOS(bool activate, bool safe, bool crisisAverted) async {
+
+    print(widget.userid);
+
+    // Testing the notifications
+
     setState(() {
       isSOSActive = activate;
       isSafe = safe;
@@ -29,10 +37,11 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
         isSOSActive: isSOSActive, 
         isSafe: isSafe,
         isCrisisAverted: isCrisisAverted,
+        userId: widget.userid
       ),
       floatingActionButton: SizedBox(
-        height: 130,
-        width: 130,
+        height: 140,
+        width: 140,
         child: FloatingActionButton(
           onPressed: () {
             if (!isSOSActive) {
@@ -52,7 +61,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
           },
           backgroundColor: isCrisisAverted
               ? Colors.grey // Neutral color when "Close" is active
-              : (isSafe && !isCrisisAverted ? Color(0xFF20E036) : Color.fromRGBO(237, 57, 57, 5)),
+              : (isSafe && !isCrisisAverted ? Color(0xFF20E036) : Color.fromRGBO(237, 57, 57, 1)),
           shape: CircleBorder(),
           elevation: 10,
           child: Text(
@@ -69,7 +78,7 @@ class _CusNavigationBarState extends State<CusNavigationBar> {
         notchMargin: 8,
         color: const Color.fromARGB(255, 55, 57, 79),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 70),
+          padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.06),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
